@@ -45,7 +45,6 @@ public class JackCompiler {
   
   public void advance(){
 	  
-
       cToken = sc.next();
 
 	  if(cToken.equals("//")){
