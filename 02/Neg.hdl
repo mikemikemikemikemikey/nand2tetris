@@ -1,0 +1,10 @@
+CHIP Neg {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Mux(a=false,b=true,sel=in[15],out=out);
+	
+	 
+}

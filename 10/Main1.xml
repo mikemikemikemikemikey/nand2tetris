@@ -1,0 +1,244 @@
+<class>
+<keyword> class </keyword>
+<identifier> main </identifier>
+<symbol> { </symbol>
+<classVariableDec>
+<keyword> static </keyword>
+<keyword> boolean </keyword>
+<identifier> test </identifier>
+<symbol> ; </symbol>
+</classVariableDec>
+<subroutineDec>
+<keyword> function </keyword>
+<keyword> void </keyword>
+<identifier> main </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<VarDec>
+<keyword> var </keyword>
+<identifier> squaregame </identifier>
+<identifier> game </identifier>
+<symbol> ; </symbol>
+</VarDec>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<identifier> game </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> squaregame </identifier>
+<symbol> . </symbol>
+<identifier> new </identifier>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<doStatement>
+<keyword> do </keyword>
+<identifier> game </identifier>
+<symbol> . </symbol>
+<identifier> run </identifier>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<doStatement>
+<keyword> do </keyword>
+<identifier> game </identifier>
+<symbol> . </symbol>
+<identifier> dispose </identifier>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<return>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</return>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<keyword> function </keyword>
+<keyword> void </keyword>
+<identifier> test </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<VarDec>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<identifier> i </identifier>
+<symbol> , </symbol>
+<identifier> j </identifier>
+<symbol> ; </symbol>
+</VarDec>
+<VarDec>
+<keyword> var </keyword>
+<identifier> string </identifier>
+<identifier> s </identifier>
+<symbol> ; </symbol>
+</VarDec>
+<VarDec>
+<keyword> var </keyword>
+<identifier> array </identifier>
+<identifier> a </identifier>
+<symbol> ; </symbol>
+</VarDec>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<keyword> false </keyword>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<identifier> s </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<string_constant> string constant </string_constant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<identifier> s </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<keyword> null </keyword>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<expression>
+<term>
+<int_constant> 1 </int_constant>
+</term>
+</expression>
+<symbol> ] </symbol>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<expression>
+<term>
+<int_constant> 2 </int_constant>
+</term>
+</expression>
+<symbol> ] </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> i </identifier>
+</term>
+<symbol> * </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> - </symbol>
+<term>
+<identifier> j </identifier>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<identifier> j </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> j </identifier>
+</term>
+<symbol> / </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> - </symbol>
+<term>
+<int_constant> 2 </int_constant>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> i </identifier>
+</term>
+<identifier> | </identifier>
+<term>
+<identifier> j </identifier>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<return>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</return>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<symbol> } </symbol>
+</class>

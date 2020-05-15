@@ -1,0 +1,97 @@
+class Character {
+
+field int x,y;
+field int length;
+field int width;
+
+   constructor Character new(int Ax, int Ay, int Alength, int Awidth ) {
+   
+      let x = Ax;
+      let y = Ay;
+	  let width = Awidth;
+	  let length = Alength;
+      do draw();
+      return this;
+	  
+	  
+	  
+   }
+   	  method int getX(){
+	  return x;
+	  }
+	  method int getY(){
+	  
+	  return (y+38);
+	  }
+   
+      method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+   
+      method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + width, y + length);
+      return;
+   }
+   
+   
+      method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + length, y + length);
+      return;
+   }
+   
+     method void moveUp() {
+      if (y > 1) {
+      do erase();
+	  let y = y - 2;
+	  do draw();
+      }
+      return;
+   }
+
+   /** Moves the square down by 2 pixels. */
+   method void moveDown() {
+      if ((y + length) < 254) {
+       do erase();
+	   let y = y + 2;
+	   do draw();
+      }
+      return;
+   }
+
+   /** Moves the square left by 2 pixels. */
+   method void moveLeft() {
+      if (x > 1) {
+         do erase();
+         let x = x - 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the square right by 2 pixels. */
+   method void moveRight() {
+      if ((x + width) < 510) {
+         do erase();
+         let x = x + 2;
+         do draw();
+      }
+      return;
+   }
+   method void jump(int x1){
+   if(x1 = 1) {do moveRight();}
+   if(x1 = -1) {do moveLeft();}
+   do moveUp();
+   return;
+   
+   }
+   method void gravity(int x1){
+   if(x1 = 1) {do moveRight();}
+   if(x1 = -1) {do moveLeft();}
+   do moveDown();   
+   return;
+   }
+
+   }
