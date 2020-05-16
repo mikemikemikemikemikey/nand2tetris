@@ -55,13 +55,13 @@ public class JackCompiler {
 	  }
       if(cToken.equals("/**")){
 		  String x = sc.findWithinHorizon(".*\\*/",1000);
-		  System.out.println(x);
+		 
 		  return;
 	  }
 		  
 	  
 	  if(cToken.matches("(\\w+\\W+.*)|(\\W\\W+)|(\\W+\\w+.*)")){
-		  System.out.println("Token " + cToken);
+		 
 		 Pattern p1 = Pattern.compile("\\w+");
 		 Matcher m1 = p1.matcher(cToken);
 		 Pattern p2 = Pattern.compile("\\W+");
@@ -72,13 +72,13 @@ public class JackCompiler {
 		 if(cToken.matches("(\\w+\\W+.*)")){
          if (m1.find()){ 
          cToken = m1.group(); tokenList.add(new TokenObject(cToken, this.tokenType()));		 
-        // System.out.println(m1.group());
+       
            }
 		 }
 		 
 	     while(m2.find()){
 			  String multiSymbol = m2.group();
-			  System.out.println("MULTI " + multiSymbol);
+			  
 			  int i = 0;
 			  while(i < multiSymbol.length()){
 				  if(multiSymbol.charAt(i) == 34){
@@ -509,9 +509,10 @@ public static void main(String[] args){
 	JackTokenizer jk = new JackTokenizer(file);
     String f1[] = file.getName().split("\\.");
 	String f2 = f1[0];
-	f2 = f2 + "1.xml";
+	f2 = args[0] + "\\" + f2 + "1.xml";
+	
 	File f3 = new File(f2);
-	System.out.println(f2);
+	System.out.println("SAVE Name " + f2);
 	
 	
 	jk.advance();
