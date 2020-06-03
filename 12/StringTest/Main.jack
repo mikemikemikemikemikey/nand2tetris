@@ -10,6 +10,7 @@ class Main {
     function void main() {
         var String s;
         var String i;
+		var int bullshit;
         
         let s = String.new(0); // a zero-capacity string should be supported
         do s.dispose();
@@ -20,7 +21,7 @@ class Main {
         let s = s.appendChar(99);
         let s = s.appendChar(100);
         let s = s.appendChar(101);
-        do Output.printString("new,appendChar: ");
+        do Output.printString("new, appendChar: ");
         do Output.printString(s);                // new, appendChar: abcde
         do Output.println();
     
@@ -39,8 +40,9 @@ class Main {
         do Output.printInt(s.length());          // length: 5
         do Output.println();
         
-        do Output.printString("charAt[2]: ");
-        do Output.printInt(s.charAt(2));         // charAt[2]: 99
+        do Output.printString("charAt2: ");
+		let bullshit = s.charAt(2);
+        do Output.printInt(bullshit);         // charAt[2]: 99
         do Output.println();
         
         do s.setCharAt(2, 45);
@@ -54,12 +56,12 @@ class Main {
         do Output.println();
         
         let s = "456";
-        do Output.printString("intValue: ");
+        
         do Output.printInt(s.intValue());        // intValue: 456
         do Output.println();
         
         let s = "-32123";
-        do Output.printString("intValue: ");
+       
         do Output.printInt(s.intValue());        // intValue: -32123
         do Output.println();
         
@@ -68,7 +70,7 @@ class Main {
         do Output.println();
         
         do Output.printString("doubleQuote: ");
-        do Output.printInt(String.doubleQuote());// doubleQuote: 34
+        do Output.printInt(String.doubleQuote()); // doubleQuote: 34
         do Output.println();
         
         do Output.printString("newLine: ");

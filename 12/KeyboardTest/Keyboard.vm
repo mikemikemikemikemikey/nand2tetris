@@ -1,0 +1,135 @@
+function Keyboard.init 0
+push constant 24567
+pop static 0
+push constant 0
+pop static 1
+push constant 0
+return
+function Keyboard.keyPressed 0
+push static 0
+call Memory.peek 1
+return
+function Keyboard.readChar 1
+label Keyboard.loopStart.0
+call Keyboard.keyPressed 0
+push constant 0
+eq
+not
+if-goto Keyboard.loopEnd.0
+goto Keyboard.loopStart.0
+label Keyboard.loopEnd.0
+call Keyboard.keyPressed 0
+pop local 0
+label Keyboard.loopStart.1
+call Keyboard.keyPressed 0
+push constant 0
+gt
+not
+if-goto Keyboard.loopEnd.1
+goto Keyboard.loopStart.1
+label Keyboard.loopEnd.1
+push local 0
+call Output.printChar 1
+pop temp 0
+push local 0
+return
+function Keyboard.readLine 4
+push constant 1
+pop local 2
+push argument 0
+call Output.printString 1
+pop temp 0
+label Keyboard.loopStart.2
+push local 2
+push constant 1
+eq
+not
+if-goto Keyboard.loopEnd.2
+call Keyboard.readChar 0
+pop local 1
+push local 1
+push constant 128
+eq
+not
+if-goto Keyboard.if.3
+call Output.println 0
+pop temp 0
+push local 0
+return
+goto Keyboard.else.3
+label Keyboard.if.3
+label Keyboard.else.3
+push local 1
+push constant 129
+eq
+not
+if-goto Keyboard.if.4
+push local 0
+call String.eraseLastChar 1
+pop temp 0
+call Output.backspace 0
+pop temp 0
+goto Keyboard.else.4
+label Keyboard.if.4
+push local 0
+push local 1
+call String.append 2
+pop local 0
+label Keyboard.else.4
+goto Keyboard.loopStart.2
+label Keyboard.loopEnd.2
+push local 0
+return
+function Keyboard.readInt 5
+push constant 1
+pop local 2
+push argument 0
+call Output.printString 1
+pop temp 0
+label Keyboard.loopStart.5
+push local 2
+push constant 1
+eq
+not
+if-goto Keyboard.loopEnd.5
+call Keyboard.readChar 0
+pop local 1
+push local 1
+push constant 128
+eq
+not
+if-goto Keyboard.if.6
+call Output.println 0
+pop temp 0
+push local 0
+call String.intValue 1
+pop local 3
+push local 3
+return
+goto Keyboard.else.6
+label Keyboard.if.6
+label Keyboard.else.6
+push local 1
+push constant 129
+eq
+not
+if-goto Keyboard.if.7
+push local 0
+call String.eraseLastChar 1
+pop temp 0
+call Output.backspace 0
+pop temp 0
+goto Keyboard.else.7
+label Keyboard.if.7
+push local 0
+push local 1
+call String.append 2
+pop local 0
+label Keyboard.else.7
+goto Keyboard.loopStart.5
+label Keyboard.loopEnd.5
+push local 0
+call String.intValue 1
+pop local 3
+push local 3
+return
