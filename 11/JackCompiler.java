@@ -30,10 +30,10 @@ public class JackCompiler {
   public int counter = 0;
   public JackTokenizer(File file){
 	  
-	  	  try
+	try
 	  {
     sc = new Scanner(file);
-	  } catch(FileNotFoundException ex){
+	} catch(FileNotFoundException ex){
 		  
 		  System.out.println("File not found");
 	  }
@@ -60,8 +60,7 @@ public class JackCompiler {
 		 
 		  return;
 	  }
-		  
-	  
+		  	  
 	  if(cToken.matches("(\\w+\\W+.*)|(\\W\\W+)|(\\W+\\w+.*)")){
 		 
 		 Pattern p1 = Pattern.compile("\\w+");
@@ -72,9 +71,9 @@ public class JackCompiler {
 		 
 		 
 		 if(cToken.matches("(\\w+\\W+.*)")){
-         if (m1.find()){ 
-         cToken = m1.group(); tokenList.add(new TokenObject(cToken, this.tokenType()));		 
-       
+           if (m1.find()){ 
+            cToken = m1.group();
+			tokenList.add(new TokenObject(cToken, this.tokenType()));		       
            }
 		 }
 		 
@@ -88,27 +87,22 @@ public class JackCompiler {
 					    if (m1.find()){quote  = quote + m1.group();}
 					     quote = quote + sc.findWithinHorizon(".*\"",100); 
 						 
-					  //System.out.println("quotes " + quote.substring(0, quote.length() - 1));
-					  tokenList.add(new TokenObject(quote.substring(0, quote.length() - 1), "STRING_CONSTANT"));
+					  
+					  tokenList.add(new TokenObject(quote.substring(0, quote.length() - 1),
+					  "STRING_CONSTANT"));
 					  return;
 				  }
 				  cToken = Character.toString(multiSymbol.charAt(i)); 
 				  tokenList.add(new TokenObject(cToken, this.tokenType()));
-		      //System.out.println(multiSymbol.charAt(i)); 
               i++;			  
 			  }
 		       
-		      if (m1.find()){cToken = m1.group(); tokenList.add(new TokenObject(cToken, this.tokenType()));}
-		 }
-          	return;
-		 
-          		 
-	  }
-
-	  tokenList.add(new TokenObject(cToken, this.tokenType()));
-	  	  
-
-	  
+		      if (m1.find()){cToken = m1.group(); 
+			  tokenList.add(new TokenObject(cToken, this.tokenType()));}
+		}
+       return;        		 
+	 }
+	  tokenList.add(new TokenObject(cToken, this.tokenType()));	  
 	  counter++;
   }
 	  
@@ -121,11 +115,8 @@ public class JackCompiler {
 		return "INT_CONSTANT";
 	} else if(cToken.matches("\"\\.*\"")){
 		return "STRING_CONSTANT";
-	} else return "IDENTIFIER";
-	
+	} else return "IDENTIFIER";	
   }
-  
-
 }
 
 public static class CompilationEngine{
@@ -134,7 +125,7 @@ public static class CompilationEngine{
 	private SymbolTable classTable;
 	private SymbolTable methodTable;
 	private String className;
-	public int c1;
+	private int c1;
 	private VMWriter wr;
 	private int expArgs;
 	private int nParams;
@@ -146,7 +137,7 @@ public static class CompilationEngine{
 	private boolean newCheck;
 	private String routineName;
     public BufferedWriter writer;
-	private boolean isArray;
+	
 	public CompilationEngine(ArrayList<TokenObject> ts, File file){
 		try {
 
@@ -169,41 +160,32 @@ public static class CompilationEngine{
 		fieldVars = 0;
 	}
 	public String statement(){
-		String s1 = ("<" + tokens.get(c1).getType().toLowerCase() + "> " + tokens.get(c1).getToken().toLowerCase() + " </" + tokens.get(c1).getType().toLowerCase() + ">\n");
+		String s1 = ("<" + tokens.get(c1).getType().toLowerCase() + "> "
+		+ tokens.get(c1).getToken().toLowerCase() + " </"
+		+ tokens.get(c1).getType().toLowerCase() + ">\n");
 		c1++;
-		return s1;
-	    
+		return s1;	    
 	}
+	
 	public void compileClass(){
 	
 	fieldVars = 0;
 	classTable.startSubroutine();	
 	
-	//writer.write(this.statement());
 	c1++;
 	className = tokens.get(c1).getToken();
 	
-	//writer.write(this.statement());
 	c1++;
-   // writer.write(this.statement());
     c1++;	
 	  while(tokens.get(c1).getToken().matches("static|field")){
 		  this.compileClassVarDec();
 	  }
-	  //System.out.println(tokens.get(c1).getToken());
 	  while(tokens.get(c1).getToken().matches("constructor|function|method")){
 		  this.compileSubroutineDec();
 	  }
-	//writer.write(this.statement());
 	c1++;
-	
-	//System.out.println("Class Table");
-	/*classTable.getMap().forEach((k,v) -> System.out.println("Name = "
-                + k + ", Type  = " + v.getType() + ", Kind = " + v.getKind()
-				+ ", index = " + v.getIndex())); */
-	//writer.write("</class>\n");
-
 	}
+	
 	public void compileClassVarDec(){
 
 		
@@ -217,32 +199,24 @@ public static class CompilationEngine{
 		if(kind.equals("this")){
 			fieldVars++;
 		}
-		//writer.write(this.statement());
-		//writer.write(this.statement());
-		//writer.write(this.statement());
 		c1 = c1 +3;
 		while(tokens.get(c1).getToken().matches(",")){
-			//writer.write(this.statement());
 			c1++;
 		classTable.define(tokens.get(c1).getToken(),kind, type);			
-			//writer.write(this.statement());
 			c1++;
 				if(kind.equals("this")){
 			       fieldVars++;
 		         }
 		}
-		//writer.write(this.statement());
 		c1++;
-	  //  writer.write("</classVariableDec>\n");
-	
 	}		
 		
 	public void compileSubroutineDec(){
 
-		System.out.println("<subroutineDec>\n");
     methodTable.startSubroutine();
 	functionVars = 0;
 	methodChecker = false;
+	
     if(tokens.get(c1).getToken().equals("method")){
 	methodChecker = true;
     methodTable.define("this", "argument", this.className);
@@ -256,62 +230,36 @@ public static class CompilationEngine{
 	}else{		
 	routineName = tokens.get(c1+2).getToken();
 	}
-	//writer.write(this.statement());
-	c1++;
-	//writer.write(this.statement());
-	c1++;
-	//writer.write(this.statement());
-	c1++;
-	//writer.write(this.statement());
-	c1++;
+	c1 = c1 +4;
 	nParams = 0;
-	   this.compileParameterList();
-	   
-	   //wr.writeFunction(className + "." + routineName, nParams);
-	//writer.write(this.statement());
-	c1++;
-	   this.compileSubroutineBody();
-	       /* System.out.println("Method Man Table");
-	        methodTable.getMap().forEach((k,v) -> System.out.println("Name = "
-                + k + ", Type  = " + v.getType() + ", Kind = " + v.getKind()
-				+ ", index = " + v.getIndex())); 	*/   
-	   //writer.write("</subroutineDec>\n");
-	
+	this.compileParameterList();
+	c1++;	
+	this.compileSubroutineBody();
 	}		
 
 	public void compileParameterList(){
 
-		//writer.write("<parameterList>\n");
-	if(tokens.get(c1).getType().matches("KEYWORD|IDENTIFIER")){
+	  if(tokens.get(c1).getType().matches("KEYWORD|IDENTIFIER")){
 		
 		methodTable.define(tokens.get(c1+1).getToken(),"argument"
 		,tokens.get(c1).getToken());
 		nParams++;
 		functionVars++;
-		//writer.write(this.statement());
 		c1++;
-		//writer.write(this.statement());
 		c1++;
 		 while(tokens.get(c1).getToken().matches(",")){
 			 nParams++;
 			 functionVars++;
-			 //writer.write(this.statement());
 			 c1++;
 	    methodTable.define(tokens.get(c1+1).getToken(),"argument"
 		,tokens.get(c1).getToken());
-			// writer.write(this.statement());
 			 c1++;
-		     //writer.write(this.statement());
 			 c1++;
 		 }
-	}
-	//writer.write("</parameterList>\n");
-			
+	  }			
 	}
 	public void compileSubroutineBody(){
 
-		//writer.write("<subroutineBody>\n");
-	//writer.write(this.statement());
 	c1++;
 	newCheck = false;
 	 while(tokens.get(c1).getToken().matches("var")){
@@ -331,47 +279,32 @@ public static class CompilationEngine{
 	 wr.writeFunction(className + "." + routineName, functionVars);	 
 	 }
 	 compileStatements();
-	 //writer.write(this.statement());
 	 c1++;
-	//writer.write("</subroutineBody>\n");
-
 	}		
 	
 	public void compileVarDec(){
 
-		//writer.write("<VarDec>\n");
 		String name = tokens.get(c1+2).getToken();
 		String kind = "local";
 		String type = tokens.get(c1 + 1).getToken();
-         methodTable.define(name,kind,type);
-         functionVars++;		 
-		 //writer.write(this.statement());
-		 //writer.write(this.statement());
-	     //writer.write(this.statement());
-		 c1 = c1 +3;
-		 while(tokens.get(c1).getToken().matches(",")){
-			//writer.write(this.statement());
+        methodTable.define(name,kind,type);
+        functionVars++;		 
+		c1 = c1 +3;
+		while(tokens.get(c1).getToken().matches(",")){
 			c1++;
 			methodTable.define(tokens.get(c1).getToken(),kind,type);
-            //writer.write(this.statement());
             c1++;	
            functionVars++;			
-		 }
-		 //writer.write(this.statement());
-		 c1++;
-		 //writer.write("</VarDec>\n");
-	
+		}
+		c1++;	
 	}		
 	
 	public void compileStatements(){
 
-            //writer.write("<statements>\n");
-	while(tokens.get(c1).getToken().matches("let|if|do|while|return")){
-		System.out.println("STATEMENTS" + tokens.get(c1).getToken());
+	  while(tokens.get(c1).getToken().matches("let|if|do|while|return")){
 		if(tokens.get(c1).getToken().matches("let")){
 			this.compileLet();
-		}
-		
+		}		
 		if(tokens.get(c1).getToken().matches("if")){
 			this.compileIf();
 		}
@@ -384,226 +317,163 @@ public static class CompilationEngine{
 		if(tokens.get(c1).getToken().matches("return")){
 		    this.compileReturn();	
 		}
-	}
-		//writer.write("</statements>\n");
-
-		
+	  }		
 	}		
 	
 	public void compileLet(){
 	
-		//writer.write("<letStatement>\n");
-	//writer.write(this.statement());
-	c1++;
-	//writer.write(this.statement());
-	String letVar = tokens.get(c1).getToken();
-	c1++;
-	 if(tokens.get(c1).getToken().matches("\\[")){
-		if(classTable.getMap().containsKey(letVar)){
-		wr.writePush(classTable.getMap().get(letVar).getKind(),
-		 classTable.getMap().get(letVar).getIndex());
-		}else if(methodTable.getMap().containsKey(letVar)){
-		wr.writePush(methodTable.getMap().get(letVar).getKind(),
-		 methodTable.getMap().get(letVar).getIndex());
-		}
-		 //writer.write(this.statement());
-		 c1++;
-		 this.compileExpression();
-		 wr.writeArithmetic("add");		 
-		 //writer.write(this.statement());
-		 c1++;
-		 c1++;
-		 this.compileExpression();
-		 wr.writePop("temp", 0);
-		 wr.writePop("pointer", 1);
-		 wr.writePush("temp", 0);
-		 wr.writePop("that", 0);
-		 c1++;
-		
-	 }else{
-	 
-	 //writer.write(this.statement());
-	 c1++;
-	 this.compileExpression();
-	 if(classTable.getMap().containsKey(letVar)){
-		 if(classTable.getMap().get(letVar).getKind().equals("static")){
-	         wr.writePop("static", classTable.getMap().get(letVar).getIndex());
-		 }else{
-			 wr.writePop("this", classTable.getMap().get(letVar).getIndex());
-		 }
-	 }else{
-		 if(methodTable.getMap().get(letVar).getKind().equals("local")){
-	 	wr.writePop("local", methodTable.getMap().get(letVar).getIndex()); 
-		 }else{
-			 wr.writePop("argument", methodTable.getMap().get(letVar).getIndex()); 
-		 }			 
-	 }
-	 
-	 //writer.write(this.statement());
-	 c1++;
-	 //writer.write("</letStatement>\n");
-	 }
-	
-	
+	  c1++;
+	  String letVar = tokens.get(c1).getToken();
+	  c1++;
+		 if(tokens.get(c1).getToken().matches("\\[")){
+			if(classTable.getMap().containsKey(letVar)){
+			wr.writePush(classTable.getMap().get(letVar).getKind(),
+			 classTable.getMap().get(letVar).getIndex());
+			}else if(methodTable.getMap().containsKey(letVar)){
+			wr.writePush(methodTable.getMap().get(letVar).getKind(),
+			 methodTable.getMap().get(letVar).getIndex());
+			}
+			 c1++;
+			 this.compileExpression();
+			 wr.writeArithmetic("add");		 
+			 c1++;
+			 c1++;
+			 this.compileExpression();
+			 wr.writePop("temp", 0);
+			 wr.writePop("pointer", 1);
+			 wr.writePush("temp", 0);
+			 wr.writePop("that", 0);
+			 c1++;
+	     }else{
+			 c1++;
+			 this.compileExpression();
+			 if(classTable.getMap().containsKey(letVar)){
+				 if(classTable.getMap().get(letVar).getKind().equals("static")){
+				   wr.writePop("static", classTable.getMap().get(letVar).getIndex());
+				 }else{
+				   wr.writePop("this", classTable.getMap().get(letVar).getIndex());
+				 }
+			 }else{
+				 if(methodTable.getMap().get(letVar).getKind().equals("local")){
+				  wr.writePop("local", methodTable.getMap().get(letVar).getIndex()); 
+				 }else{
+				   wr.writePop("argument", methodTable.getMap().get(letVar).getIndex()); 
+				 }			 
+			 }
+			 c1++;
+	    }   
 	}		
 	
 	public void compileIf(){
 	
-		//writer.write("<ifStatement>\n");
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-	c1 = c1 +2;
-	int ifNum = loopNum;
-	String label1 = className + ".if." + ifNum;
-	String label2 = className + ".else." + ifNum;
-	loopNum++;
-	 this.compileExpression();
-	 wr.writeArithmetic("not");
-	 wr.writeIf(label1);
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-	c1 = c1 +2;
-	 this.compileStatements();
-	//writer.write(this.statement());
-	c1++;
-	wr.writeGoto(label2);
-	if(tokens.get(c1).getToken().matches("else")){
-		wr.writeLabel(label1);
-	//writer.write(this.statement());
-    //writer.write(this.statement());
-	c1 = c1+2;
-     this.compileStatements();
-    //writer.write(this.statement());
-    c1++;	
-	wr.writeLabel(label2);
-	}else{
-		wr.writeLabel(label1);
-		wr.writeLabel(label2);
-	}
-
-	//writer.write("</ifStatement>\n");
-	
+		c1 = c1 +2;
+		int ifNum = loopNum;
+		String label1 = className + ".if." + ifNum;
+		String label2 = className + ".else." + ifNum;
+		loopNum++;
+		this.compileExpression();
+		wr.writeArithmetic("not");
+		wr.writeIf(label1);
+		c1 = c1 +2;
+		this.compileStatements();
+		c1++;
+		wr.writeGoto(label2);
+		if(tokens.get(c1).getToken().matches("else")){
+		  wr.writeLabel(label1);
+		  c1 = c1+2;
+		  this.compileStatements();
+		  c1++;	
+		  wr.writeLabel(label2);
+		}else{
+			wr.writeLabel(label1);
+			wr.writeLabel(label2);
+		}
 	}		
 	
 	public void compileWhile(){
-	
-		//writer.write("<whileStatement>\n");
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-	c1 = c1 +2;
-	int loopStart = loopNum;
-	wr.writeLabel(className+ ".loopStart." + loopStart);
-	loopNum++;
-	 this.compileExpression();
-	 wr.writeArithmetic("not");
-	 wr.writeIf(className + ".loopEnd." + loopStart);
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-	c1 = c1 +2;
-	 this.compileStatements();
-	//writer.write(this.statement());
-	c1++;
-	wr.writeGoto(className+ ".loopStart." + loopStart);
-	wr.writeLabel(className + ".loopEnd." + loopStart);
-	//writer.write("</whileStatement>\n");
 		
+		c1 = c1 +2;
+		int loopStart = loopNum;
+		wr.writeLabel(className+ ".loopStart." + loopStart);
+		loopNum++;
+		this.compileExpression();
+		wr.writeArithmetic("not");
+		wr.writeIf(className + ".loopEnd." + loopStart);
+		c1 = c1 +2;
+		this.compileStatements();
+		c1++;
+		wr.writeGoto(className+ ".loopStart." + loopStart);
+		wr.writeLabel(className + ".loopEnd." + loopStart);
 	}		
 	
 	public void compileDo(){
-	
-		//writer.write("<doStatement>\n");
-		//writer.write(this.statement());
+		
 		c1++;
 		if(tokens.get(c1+1).getToken().matches("\\(")){
-	String thisFunction = tokens.get(c1).getToken();
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-    c1 = c1+2;
-    expArgs = 1;
-	if(newCheck == true){
-		wr.writePush("pointer", 0);
-	}else{
-    wr.writePush("argument", 0);
-	}	
-    this.compileExpressionList();
-	wr.writeCall(className + "." + thisFunction, expArgs);
-	wr.writePop("temp", 0);
-    //writer.write(this.statement());
-    //writer.write(this.statement());
-    c1 = c1 +2;
-	
+			String thisFunction = tokens.get(c1).getToken();
+			c1 = c1+2;
+			expArgs = 1;
+			if(newCheck == true){
+				wr.writePush("pointer", 0);
+			}else{
+			wr.writePush("argument", 0);
+			}	
+			this.compileExpressionList();
+			wr.writeCall(className + "." + thisFunction, expArgs);
+			wr.writePop("temp", 0);
+			c1 = c1 +2;
+			
 		} else{   
-	
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-	//writer.write(this.statement());
-    //writer.write(this.statement());
-	String methCheck = tokens.get(c1).getToken();
-	String fun1 = "";
-	expArgs = 0;
-	if(classTable.getMap().containsKey(methCheck)){
-		fun1 = classTable.getMap().get(methCheck).getType()+
-		tokens.get(c1+1).getToken()+tokens.get(c1+2).getToken();
-		wr.writePush(classTable.getMap().get(methCheck).getKind(),
-		 classTable.getMap().get(methCheck).getIndex());
-		 expArgs++;
-	}else if(methodTable.getMap().containsKey(methCheck)){
-		fun1 = methodTable.getMap().get(methCheck).getType()+
-		tokens.get(c1+1).getToken()+tokens.get(c1+2).getToken();
-		wr.writePush(methodTable.getMap().get(methCheck).getKind(),
-		 methodTable.getMap().get(methCheck).getIndex());
-		 expArgs++;
-		 
-	} else{		
-	 fun1 = tokens.get(c1).getToken()+tokens.get(c1+1).getToken()+
-      tokens.get(c1+2).getToken();	
-	}
-	c1 = c1 +4;
-	 this.compileExpressionList();
-	 wr.writeCall(fun1, expArgs);
-	 wr.writePop("temp", 0);
-	//writer.write(this.statement());
-	c1++;
-	//writer.write(this.statement());
-	c1++;
-	}
-	
-    //writer.write("</doStatement>\n");	
-	
-		
+		  String methCheck = tokens.get(c1).getToken();
+		  String fun1 = "";
+		  expArgs = 0;
+		  if(classTable.getMap().containsKey(methCheck)){
+			fun1 = classTable.getMap().get(methCheck).getType()+
+			tokens.get(c1+1).getToken()+tokens.get(c1+2).getToken();
+			wr.writePush(classTable.getMap().get(methCheck).getKind(),
+			 classTable.getMap().get(methCheck).getIndex());
+			 expArgs++;
+		  }else if(methodTable.getMap().containsKey(methCheck)){
+			fun1 = methodTable.getMap().get(methCheck).getType()+
+			tokens.get(c1+1).getToken()+tokens.get(c1+2).getToken();
+			wr.writePush(methodTable.getMap().get(methCheck).getKind(),
+			 methodTable.getMap().get(methCheck).getIndex());
+			 expArgs++;
+			 
+		  } else{		
+		 fun1 = tokens.get(c1).getToken()+tokens.get(c1+1).getToken()+
+		  tokens.get(c1+2).getToken();	
+		  }
+		 c1 = c1 +4;
+		 this.compileExpressionList();
+		 wr.writeCall(fun1, expArgs);
+		 wr.writePop("temp", 0);
+		 c1++;
+		 c1++;
+		}	
 	}		
 	
 	public void compileReturn(){
 	
-		//writer.write("<return>\n");
-	//writer.write(this.statement());
-	c1++;
-	if(tokens.get(c1).getToken().matches(";")){
-		wr.writePush("constant", 0);
-		wr.writeReturn();
-		//writer.write(this.statement());
 		c1++;
-	}else{
-	this.compileExpression();
-	wr.writeReturn();
-    //writer.write(this.statement());
-    c1++;	
-	}
-	//writer.write("</return>\n");
-		
+		if(tokens.get(c1).getToken().matches(";")){
+			wr.writePush("constant", 0);
+			wr.writeReturn();
+			c1++;
+		}else{
+		this.compileExpression();
+		wr.writeReturn();
+		c1++;	
+		}
 	}		
 	
 	public void compileExpression(){
 
-		//writer.write("<expression>\n");
-	    this.compileTerm();
-		while(tokens.get(c1).getToken().matches("[\\+\\-\\*/\\&\\|\\<\\>\\=]")){
-			//writer.write(this.statement());
-			String sym = tokens.get(c1).getToken();
-			
+	  this.compileTerm();
+      while(tokens.get(c1).getToken().matches("[\\+\\-\\*/\\&\\|\\<\\>\\=]")){
+			String sym = tokens.get(c1).getToken();			
 			c1++;
 			this.compileTerm();
-			
 			if(sym.equals("+")){
 				wr.writeArithmetic("add");
 			}else if(sym.equals("-")){
@@ -622,19 +492,13 @@ public static class CompilationEngine{
 				wr.writeArithmetic("and");
 			}else if(sym.equals("|")){
 				wr.writeArithmetic("or");
-			}
-			
-		}
-		//writer.write("</expression>\n");
-	
+			}			
+	    }
 	}		
 	
 	public void compileTerm(){
 	
-		//writer.write("<term>\n");
-		System.out.println("TERM " + tokens.get(c1).getToken()); 
 		if(tokens.get(c1).getToken().matches("\\-|\\~")){					
-			//writer.write(this.statement());
 			String fu = tokens.get(c1).getToken();
 			c1++;
 			int holder = c1;
@@ -654,15 +518,11 @@ public static class CompilationEngine{
 		          wr.writePush(methodTable.getMap().get(methodCheck).getKind(),
 		          methodTable.getMap().get(methodCheck).getIndex());
 		      }
-				//writer.write(this.statement());
-				//writer.write(this.statement());
 				c1 = c1+2;
 				this.compileExpression();
-                wr.writeArithmetic("add");
-                				
+                wr.writeArithmetic("add");             				
 				wr.writePop("pointer", 1);
 				wr.writePush("that", 0);
-				//writer.write(this.statement());
 				c1++;
 			}else if(tokens.get(c1+1).getToken().matches("\\.")){
 				String fCall = "";
@@ -681,18 +541,12 @@ public static class CompilationEngine{
                         "." + tokens.get(c1+2).getToken();
                      termArgs++;						
 				  } else{
-				//writer.write(this.statement());
-				//writer.write(this.statement());
-				//writer.write(this.statement());
-				//writer.write(this.statement());
 				System.out.println("MEth 2 " + methodCheck);
 			    fCall = tokens.get(c1).getToken() + "." + tokens.get(c1+2).getToken();
 				  }
-				c1 = c1 +4;
-				
+				c1 = c1 +4;				
 				this.compileExpressionList();
 				wr.writeCall(fCall, termArgs); 
-				//writer.write(this.statement());
 				c1++;
 			}else{
 				  if(classTable.getMap().containsKey(methodCheck)){
@@ -702,15 +556,11 @@ public static class CompilationEngine{
 					  wr.writePush(methodTable.getMap().get(methodCheck).getKind(),
                       	methodTable.getMap().get(methodCheck).getIndex());						
 				  }
-				//writer.write(this.statement());
 				c1++;
 			}
-				
 		}else if(tokens.get(c1).getToken().matches("\\(")){
-			//writer.write(this.statement());
 			c1++;
 			this.compileExpression();
-			//writer.write(this.statement());
 			c1++;
 		} else if(tokens.get(c1).getType().equals("KEYWORD")){
 		    if(tokens.get(c1).getToken().equals("true")){
@@ -719,7 +569,6 @@ public static class CompilationEngine{
 			}else if(tokens.get(c1).getToken().equals("this")){
 				wr.writePush("pointer", 0);
 			}else{
-				
 				wr.writePush("constant", 0);
 			}
 			c1++;
@@ -736,41 +585,29 @@ public static class CompilationEngine{
 			}
 			wr.writePush("temp", 0);
 			c1++;
-			
 		}else{
-			//writer.write(this.statement());
 			if(tokens.get(c1).getType().equals("INT_CONSTANT")){
 			wr.writePush("constant", Integer.valueOf(tokens.get(c1).getToken()));						
 			}
 			c1++;
 		}
-		
-	  //writer.write("</term>\n");
-	
 	}		
 	
 	public void compileExpressionList(){
 
-		//writer.write("<expressionList>\n");
-		if(tokens.get(c1).getToken().matches("\\)")){
-			//writer.write("</expressionList>\n");
+	  if(tokens.get(c1).getToken().matches("\\)")){
 			return;
-		}
+	  }
 	 
 	  this.compileExpression();
-	   expArgs++;
-	   termArgs++;
-	   while(tokens.get(c1).getToken().matches(",")){
-		
-		 //writer.write(this.statement());
+	  expArgs++;
+	  termArgs++;
+	  while(tokens.get(c1).getToken().matches(",")){
 		 c1++;
          this.compileExpression();
 		 expArgs++;
-		 termArgs++;
-		 
+		 termArgs++;		 
 	   }
-	   //writer.write("</expressionList>\n");
-
 	}		
 	
 	public  void close(){
@@ -778,9 +615,8 @@ public static class CompilationEngine{
 		wr.close();
 		try{
 		writer.close();	
-				} catch (IOException e){
-			System.out.println(e);
-			
+		} catch (IOException e){
+			System.out.println(e);	
 		}
 	}
 	
@@ -851,7 +687,6 @@ public static class SymbolTable{
 			this.arg++;
 			return this.arg -1;
 		}
-		
 		this.var++;
 		return this.var -1;
 		
@@ -874,9 +709,7 @@ public static class VMWriter{
 	public VMWriter(File file){
 		
 		try {
-
 			writer = new BufferedWriter(new FileWriter(file));
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -884,9 +717,7 @@ public static class VMWriter{
 
 	public void writePush(String segment, int index){
 		try {
-
 		 writer.write("push " + segment + " " + index + "\n");	
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -894,18 +725,13 @@ public static class VMWriter{
     public void writePop(String segment, int index){
     	try {
            writer.write("pop " + segment + " " + index + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
 	}
     public void writeArithmetic(String command){
 		try {
-			
         writer.write(command.toLowerCase() + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -913,8 +739,6 @@ public static class VMWriter{
 	public void writeLabel(String label){
 		try {
         writer.write("label " + label + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -922,8 +746,6 @@ public static class VMWriter{
 	public void writeGoto(String label){
 		try {
          writer.write("goto " + label + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -931,8 +753,6 @@ public static class VMWriter{
 	public void writeIf(String label){
 		try {
         writer.write("if-goto " + label + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -940,8 +760,6 @@ public static class VMWriter{
 	public void writeCall(String name, int args){
 		try {
          writer.write("call " + name + " " + args + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -949,8 +767,6 @@ public static class VMWriter{
 	public void writeFunction(String name, int n){
 		try {
          writer.write("function " + name + " " + n + "\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
@@ -958,75 +774,44 @@ public static class VMWriter{
 	public void writeReturn(){
 		try {
          writer.write("return\n");
-			
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
 	}
 	public void close(){
 		try {
-
 		writer.close();	
-		
 		} catch (IOException e){
 			System.out.println(e);
 		}
 	}
 }
 
-
-
 public static void main(String[] args){
 		
-		File file3 = new File(args[0]);
-	    FilenameFilter txtFileFilter = new FilenameFilter()
-        {
-            
-            public boolean accept(File dir, String name)
-            {
-                if(name.endsWith(".jack"))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        };
-
-
+	File file3 = new File(args[0]);
+	FilenameFilter txtFileFilter = new FilenameFilter(){
+      public boolean accept(File dir, String name){
+        if(name.endsWith(".jack")){
+          return true;
+        }else{return false;}
+      }
+    };
+		
 	File[] files = file3.listFiles(txtFileFilter);
-	
 	for(File file : files){
-		System.out.println(file.getName());
-
-	JackTokenizer jk = new JackTokenizer(file);
-	
-    String[] f1 = file.getName().split("\\.");
-    
+	JackTokenizer jk = new JackTokenizer(file);	
+    String[] f1 = file.getName().split("\\.");   
 	String f2 = args[0] + "\\" + f1[0] + ".vm";
-	
-	
-	
 	File f3 = new File(f2);
-	//System.out.println("SAVE Name " + f2);
-	
-	
 	jk.advance();
+	
 	while(jk.hasMoreTokens()){
 		jk.advance();
 	}
 	CompilationEngine comp = new CompilationEngine(jk.tokenList, f3);
 	comp.compileClass();
 	comp.close();
-//	for(TokenObject a : jk.tokenList){
-	//	System.out.println(a.getToken() + " " + a.getType());
-		//}
-	}
-
-	
+	}	
 }
-
 }
